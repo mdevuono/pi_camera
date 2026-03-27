@@ -120,6 +120,9 @@
       <button class="ctrl-btn" id="reload-btn" title="Reload stream">
         <svg viewBox="0 0 16 16"><path d="M13.5 2.5A7 7 0 1 0 15 8h-1.5A5.5 5.5 0 1 1 11 3.5L9 5.5h5v-5l-1.5 2z"/></svg>
       </button>
+      <button class="ctrl-btn" id="fs-btn" title="Fullscreen">
+        <svg viewBox="0 0 16 16" id="fs-icon"><path d="M1 1h5v1.5H2.5V5H1zm9 0h5v4h-1.5V2.5H10zm-9 9h1.5v2.5H5V14H1zm9 2.5V11h1.5v3H11v-1h-1z" id="fs-expand"/></svg>
+      </button>
     </div>
   </div>
 </div>
@@ -213,6 +216,56 @@ document.getElementById('mute-btn').addEventListener('click', function() {
 });
 
 document.getElementById('reload-btn').addEventListener('click', loadStream);
+
+// ── Fullscreen ────────────────────────────────────────────────────────────────
+var fsBtn  = document.getElementById('fs-btn');
+var fsIcon = document.getElementById('fs-expand');
+
+var expandPath  = 'M1 1h5v1.5H2.5V5H1zm9 0h5v4h-1.5V2.5H10zm-9 9h1.5v2.5H5V14H1zm9 2.5V11h1.5v3H11v-1h-1z';
+var collapsePath = 'M6 1v5H1V4.5h3.5V1zm4 0v3.5H13.5V6H9V1zM1 10h5v5H4.5v-3.5H1zm8 3.5H13V10h1.5v5H9z';
+
+function enterFullscreen() {
+  var el = document.getElementById('video-wrap');
+  if (el.requestFullscreen)            el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  // iOS Safari fallback — expand video-wrap to cover full screen
+  if (!document.fullscreenEnabled && !document.webkitFullscreenEnabled) {
+    document.getElementById('app').style.cssText = 'position:fixed;inset:0;z-index:9999;';
+    el.style.cssText = 'position:fixed;inset:0;z-index:9999;background:#000;';
+    player.style.width = '100%';
+    player.style.height = '100%';
+    fsIcon.setAttribute('d', collapsePath);
+    fsBtn.classList.add('active');
+  }
+}
+
+function exitFullscreen() {
+  if (document.exitFullscreen)            document.exitFullscreen();
+  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+  document.getElementById('app').style.cssText = '';
+  document.getElementById('video-wrap').style.cssText = '';
+  applyRotation();
+  fsIcon.setAttribute('d', expandPath);
+  fsBtn.classList.remove('active');
+}
+
+var isFullscreen = false;
+fsBtn.addEventListener('click', function() {
+  isFullscreen = !isFullscreen;
+  if (isFullscreen) enterFullscreen();
+  else exitFullscreen();
+});
+
+document.addEventListener('fullscreenchange', function() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    isFullscreen = false;
+    fsIcon.setAttribute('d', expandPath);
+    fsBtn.classList.remove('active');
+  } else {
+    fsIcon.setAttribute('d', collapsePath);
+    fsBtn.classList.add('active');
+  }
+});
 
 // ── Service worker ────────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
