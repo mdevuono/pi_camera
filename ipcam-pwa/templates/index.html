@@ -12,88 +12,52 @@
   <title>IPCam</title>
   <style>
     :root {
-      --bg: #0a0a0f; --surface: #111118; --border: #1e1e2e;
-      --accent: #00e5ff; --danger: #ff4466; --text: #e8e8f0; --muted: #555570;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-bot: env(safe-area-inset-bottom, 0px);
+      --bg:#0a0a0f;--surface:#111118;--border:#1e1e2e;
+      --accent:#00e5ff;--danger:#ff4466;--text:#e8e8f0;--muted:#555570;
+      --safe-top:env(safe-area-inset-top,0px);--safe-bot:env(safe-area-inset-bottom,0px);
     }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
-
-    #app {
-      display: flex; flex-direction: column; height: 100dvh;
-      padding-top: var(--safe-top); padding-bottom: var(--safe-bot);
-    }
-
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 18px; border-bottom: 1px solid var(--border);
-      flex-shrink: 0; background: var(--bg);
-    }
-    .logo { display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-    .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 2s ease-in-out infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
-
-    #status-bar {
-      font-size: 11px; font-family: ui-monospace, monospace; color: var(--muted);
-      padding: 5px 18px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; gap: 16px;
-      flex-shrink: 0; background: var(--surface);
-    }
-    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); display: inline-block; margin-right: 4px; }
-    .dot.ok  { background: #00e676; box-shadow: 0 0 5px #00e676; }
-    .dot.err { background: var(--danger); }
-
-    #video-wrap {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      background: #000; position: relative; overflow: hidden;
-    }
-    video {
-      width: 100%; height: 100%; object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    #overlay {
-      position: absolute; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 12px;
-      background: rgba(0,0,0,.8); color: var(--muted); font-size: 13px;
-    }
-    #overlay.hidden { display: none; }
-    .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    #overlay.error { color: var(--danger); }
-    #overlay.error .spinner { display: none; }
-
-    .live-badge {
-      position: absolute; top: 12px; left: 12px;
-      background: var(--danger); color: #fff; font-size: 10px; font-weight: 700;
-      padding: 3px 7px; border-radius: 4px; letter-spacing: .06em;
-      opacity: 0; transition: opacity .3s;
-    }
-    .live-badge.visible { opacity: 1; }
-
-    #controls {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 10px 18px; border-top: 1px solid var(--border);
-      flex-shrink: 0; background: var(--surface);
-    }
-    #cam-label { font-size: 13px; font-weight: 600; }
-    .ctrl-btn {
-      width: 36px; height: 36px; border: 1px solid var(--border);
-      background: var(--bg); border-radius: 8px; color: var(--text);
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer; -webkit-tap-highlight-color: transparent;
-    }
-    .ctrl-btn svg { width: 16px; height: 16px; fill: currentColor; }
-    .ctrl-btn:active { background: var(--border); }
-    .ctrl-btn.active { border-color: var(--accent); color: var(--accent); }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+    #app{display:flex;flex-direction:column;height:100dvh;padding-top:var(--safe-top);padding-bottom:var(--safe-bot);}
+    header{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg);}
+    .logo{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
+    .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:pulse 2s ease-in-out infinite;}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+    #status-bar{font-size:11px;font-family:ui-monospace,monospace;color:var(--muted);padding:5px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;flex-shrink:0;background:var(--surface);}
+    .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);display:inline-block;margin-right:4px;}
+    .dot.ok{background:#00e676;box-shadow:0 0 5px #00e676;}.dot.err{background:var(--danger);}
+    #video-wrap{flex:1;display:flex;align-items:center;justify-content:center;background:#000;position:relative;overflow:hidden;}
+    video{width:100%;height:100%;object-fit:cover;transition:transform 0.3s ease;}
+    video.fit{object-fit:contain;}
+    #overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(0,0,0,.8);color:var(--muted);font-size:13px;pointer-events:none;}
+    #overlay.hidden{display:none;}
+    .spinner{width:28px;height:28px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    #overlay.error{color:var(--danger);}
+    #overlay.error .spinner{display:none;}
+    .live-badge{position:absolute;top:12px;left:12px;background:var(--danger);color:#fff;font-size:10px;font-weight:700;padding:3px 7px;border-radius:4px;letter-spacing:.06em;opacity:0;transition:opacity .3s;pointer-events:none;}
+    .live-badge.visible{opacity:1;}
+    #controls{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;border-top:1px solid var(--border);flex-shrink:0;background:var(--surface);}
+    #cam-label{font-size:13px;font-weight:600;}
+    .ctrl-btn{width:36px;height:36px;border:1px solid var(--border);background:var(--bg);border-radius:8px;color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s;}
+    .ctrl-btn svg{width:16px;height:16px;fill:currentColor;}
+    .ctrl-btn:active{background:var(--border);}
+    .ctrl-btn.active{border-color:var(--accent);color:var(--accent);}
+    #fs-exit-btn{display:none;position:fixed;top:calc(var(--safe-top) + 12px);right:12px;z-index:10000;width:48px;height:48px;background:rgba(0,0,0,.8);border:1px solid rgba(255,255,255,.3);border-radius:12px;color:#fff;align-items:center;justify-content:center;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    #fs-exit-btn svg{width:22px;height:22px;fill:currentColor;}
+    #fs-exit-btn.visible{display:flex;}
   </style>
 </head>
 <body>
+
+<button id="fs-exit-btn" title="Exit fullscreen">
+  <svg viewBox="0 0 24 24"><path d="M8 3v3H5v2h5V3zm6 0v5h5V6h-3V3zm-9 13H2v2h3v3h2v-5zm9 3v-3h3v-2h-5v5z"/></svg>
+</button>
+
 <div id="app">
   <header>
     <div class="logo"><div class="logo-dot"></div>IPCam</div>
-    <div style="font-size:11px;font-family:ui-monospace,monospace;color:var(--muted)" id="res-label">1920×1080 · 30fps</div>
+    <div style="font-size:11px;font-family:ui-monospace,monospace;color:var(--muted)">1920x1080 &middot; 30fps</div>
   </header>
 
   <div id="status-bar">
@@ -104,24 +68,30 @@
 
   <div id="video-wrap">
     <video id="player" playsinline webkit-playsinline muted autoplay></video>
-    <div id="overlay"><div class="spinner"></div><span id="overlay-msg">Connecting…</span></div>
+    <div id="overlay"><div class="spinner"></div><span id="overlay-msg">Connecting...</span></div>
     <div class="live-badge" id="live-badge">LIVE</div>
   </div>
 
   <div id="controls">
     <div id="cam-label">USB Camera</div>
     <div style="display:flex;gap:8px">
-      <button class="ctrl-btn" id="mute-btn" title="Toggle mute">
+      <button class="ctrl-btn active" id="mute-btn" title="Toggle mute">
         <svg viewBox="0 0 16 16"><path d="M8 1L4 5H1v6h3l4 4V1zm4.5 2.5a7 7 0 0 1 0 9M11 5a4 4 0 0 1 0 6"/></svg>
       </button>
-      <button class="ctrl-btn" id="rotate-btn" title="Rotate 90°">
+      <button class="ctrl-btn" id="fit-btn" title="Fit to screen (no crop)">
+        <svg viewBox="0 0 16 16">
+          <path d="M1 1h4v1.5H2.5V5H1zm10 0h4v4h-1.5V2.5H11zM1 11h1.5v2.5H5V15H1zm10 2.5H13.5V11H15v4h-4z"/>
+          <rect x="4" y="4" width="8" height="8" fill="none" stroke="currentColor" stroke-width="1.2" rx="0.5"/>
+        </svg>
+      </button>
+      <button class="ctrl-btn" id="rotate-btn" title="Rotate 90 degrees">
         <svg viewBox="0 0 16 16"><path d="M2 8a6 6 0 1 0 6-6V0L4 3l4 3V4a4 4 0 1 1-4 4H2z"/></svg>
       </button>
       <button class="ctrl-btn" id="reload-btn" title="Reload stream">
         <svg viewBox="0 0 16 16"><path d="M13.5 2.5A7 7 0 1 0 15 8h-1.5A5.5 5.5 0 1 1 11 3.5L9 5.5h5v-5l-1.5 2z"/></svg>
       </button>
       <button class="ctrl-btn" id="fs-btn" title="Fullscreen">
-        <svg viewBox="0 0 16 16" id="fs-icon"><path d="M1 1h5v1.5H2.5V5H1zm9 0h5v4h-1.5V2.5H10zm-9 9h1.5v2.5H5V14H1zm9 2.5V11h1.5v3H11v-1h-1z" id="fs-expand"/></svg>
+        <svg viewBox="0 0 16 16"><path id="fs-path" d="M1 1h5v1.5H2.5V5H1zm9 0h5v4h-1.5V2.5H10zm-9 9h1.5v2.5H5V15H1zm9 2.5V11h1.5v3H11v-1h-1z"/></svg>
       </button>
     </div>
   </div>
@@ -134,32 +104,17 @@ var player     = document.getElementById('player');
 var overlay    = document.getElementById('overlay');
 var overlayMsg = document.getElementById('overlay-msg');
 var liveBadge  = document.getElementById('live-badge');
-var muted      = true;
-var rotation   = parseInt(localStorage.getItem('ipcam_rotation') || '0');
+var app        = document.getElementById('app');
+var wrap       = document.getElementById('video-wrap');
+var fsPath     = document.getElementById('fs-path');
+var fsExitBtn  = document.getElementById('fs-exit-btn');
+var expandD    = 'M1 1h5v1.5H2.5V5H1zm9 0h5v4h-1.5V2.5H10zm-9 9h1.5v2.5H5V15H1zm9 2.5V11h1.5v3H11v-1h-1z';
+var collapseD  = 'M6 1v5H1V4.5h3.5V1zm4 0v3.5H13.5V6H9V1zM1 10h5v5H4.5v-3.5H1zm8 3.5H13V10h1.5v5H9z';
 
-// ── Rotation ──────────────────────────────────────────────────────────────────
-function applyRotation() {
-  var transforms = ['', 'rotate(90deg)', 'rotate(180deg)', 'rotate(270deg)'];
-  player.style.transform = transforms[rotation];
-  if (rotation === 1 || rotation === 3) {
-    // Swap width/height for portrait rotations
-    var wrap = document.getElementById('video-wrap');
-    var w = wrap.offsetHeight;
-    var h = wrap.offsetWidth;
-    player.style.width  = w + 'px';
-    player.style.height = h + 'px';
-  } else {
-    player.style.width  = '100%';
-    player.style.height = '100%';
-  }
-}
-
-document.getElementById('rotate-btn').addEventListener('click', function() {
-  rotation = (rotation + 1) % 4;
-  localStorage.setItem('ipcam_rotation', rotation);
-  applyRotation();
-  this.classList.toggle('active', rotation !== 0);
-});
+var muted    = true;
+var rotation = parseInt(localStorage.getItem('ipcam_rotation') || '0');
+var fitMode  = localStorage.getItem('ipcam_fit') === 'true';
+var iosFs    = false;
 
 // ── Overlay ───────────────────────────────────────────────────────────────────
 function setOverlay(state, msg) {
@@ -170,29 +125,23 @@ function setOverlay(state, msg) {
 
 // ── Stream ────────────────────────────────────────────────────────────────────
 function loadStream() {
-  setOverlay('loading', 'Connecting…');
+  setOverlay('loading', 'Connecting...');
   player.src = '';
-
   if (!player.canPlayType('application/vnd.apple.mpegurl')) {
-    setOverlay('error', 'HLS not supported — use Safari.');
+    setOverlay('error', 'HLS not supported - use Safari.');
     return;
   }
-
   player.src = STREAM_URL;
   player.load();
   player.play().catch(function() {});
-
-  player.oncanplay  = function() { setOverlay('hidden'); player.play().catch(function(){}); };
-  player.onplaying  = function() { setOverlay('hidden'); };
-  player.onstalled  = function() { setOverlay('loading', 'Buffering…'); };
-  player.onwaiting  = function() { setOverlay('loading', 'Buffering…'); };
-  player.onerror    = function() {
-    setOverlay('error', 'Stream error — retrying…');
-    setTimeout(loadStream, 5000);
-  };
+  player.oncanplay = function() { setOverlay('hidden'); player.play().catch(function(){}); };
+  player.onplaying = function() { setOverlay('hidden'); };
+  player.onstalled = function() { setOverlay('loading', 'Buffering...'); };
+  player.onwaiting = function() { setOverlay('loading', 'Buffering...'); };
+  player.onerror   = function() { setOverlay('error', 'Stream error - retrying...'); setTimeout(loadStream, 5000); };
 }
 
-// ── Health check ──────────────────────────────────────────────────────────────
+// ── Health ────────────────────────────────────────────────────────────────────
 function checkHealth() {
   fetch(BASE + '/api/health', { signal: AbortSignal.timeout(3000) })
     .then(function(r) { return r.json(); })
@@ -202,19 +151,93 @@ function checkHealth() {
       document.getElementById('stream-dot').className = 'dot ' + (d.playlist ? 'ok' : 'err');
     })
     .catch(function() {
-      ['flask-dot', 'ffmpeg-dot', 'stream-dot'].forEach(function(id) {
-        document.getElementById(id).className = 'dot err';
-      });
+      ['flask-dot','ffmpeg-dot','stream-dot'].forEach(function(id) { document.getElementById(id).className = 'dot err'; });
     });
 }
 
-// ── Controls ──────────────────────────────────────────────────────────────────
+// ── Fit / Fill ────────────────────────────────────────────────────────────────
+function applyFit() {
+  player.classList.toggle('fit', fitMode);
+  document.getElementById('fit-btn').classList.toggle('active', fitMode);
+}
+document.getElementById('fit-btn').addEventListener('click', function() {
+  fitMode = !fitMode;
+  localStorage.setItem('ipcam_fit', fitMode);
+  applyFit();
+});
+
+// ── Rotation ──────────────────────────────────────────────────────────────────
+function applyRotation() {
+  var transforms = ['', 'rotate(90deg)', 'rotate(180deg)', 'rotate(270deg)'];
+  player.style.transform = transforms[rotation];
+  if (rotation === 1 || rotation === 3) {
+    player.style.width  = wrap.offsetHeight + 'px';
+    player.style.height = wrap.offsetWidth  + 'px';
+  } else {
+    player.style.width  = '100%';
+    player.style.height = '100%';
+  }
+  document.getElementById('rotate-btn').classList.toggle('active', rotation !== 0);
+}
+document.getElementById('rotate-btn').addEventListener('click', function() {
+  rotation = (rotation + 1) % 4;
+  localStorage.setItem('ipcam_rotation', rotation);
+  applyRotation();
+});
+
+// ── Mute ──────────────────────────────────────────────────────────────────────
 document.getElementById('mute-btn').addEventListener('click', function() {
   muted = !muted;
   player.muted = muted;
-  this.classList.toggle('active', !muted);
+  this.classList.toggle('active', muted);
 });
 
+// ── Fullscreen ────────────────────────────────────────────────────────────────
+function nativeFsAvailable() {
+  return !!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+}
+
+function enterIosFs() {
+  iosFs = true;
+  app.style.cssText = 'position:fixed;inset:0;z-index:9998;display:flex;flex-direction:column;padding:0;';
+  fsPath.setAttribute('d', collapseD);
+  document.getElementById('fs-btn').classList.add('active');
+  fsExitBtn.classList.add('visible');
+  applyRotation();
+}
+
+function exitIosFs() {
+  iosFs = false;
+  app.style.cssText = '';
+  fsPath.setAttribute('d', expandD);
+  document.getElementById('fs-btn').classList.remove('active');
+  fsExitBtn.classList.remove('visible');
+  applyRotation();
+}
+
+document.getElementById('fs-btn').addEventListener('click', function() {
+  if (nativeFsAvailable()) {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen).call(document.documentElement);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    }
+  } else {
+    iosFs ? exitIosFs() : enterIosFs();
+  }
+});
+
+fsExitBtn.addEventListener('click', exitIosFs);
+
+['fullscreenchange', 'webkitfullscreenchange'].forEach(function(ev) {
+  document.addEventListener(ev, function() {
+    var inFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+    fsPath.setAttribute('d', inFs ? collapseD : expandD);
+    document.getElementById('fs-btn').classList.toggle('active', inFs);
+  });
+});
+
+// ── Reload ────────────────────────────────────────────────────────────────────
 document.getElementById('reload-btn').addEventListener('click', loadStream);
 
 // ── Fullscreen ────────────────────────────────────────────────────────────────
@@ -273,6 +296,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+applyFit();
 applyRotation();
 checkHealth();
 setInterval(checkHealth, 10000);
