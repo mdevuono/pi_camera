@@ -19,7 +19,7 @@ ExecStart=/usr/bin/ffmpeg \
   -tune zerolatency \
   -profile:v baseline \
   -level 3.1 \
-  -b:v 1M \
+  -b:v 4M \
   -g 60 \
   -keyint_min 60 \
   -sc_threshold 0 \
