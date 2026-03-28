@@ -64,6 +64,8 @@
     <span><span class="dot" id="flask-dot"></span>Server</span>
     <span><span class="dot" id="ffmpeg-dot"></span>Camera</span>
     <span><span class="dot" id="stream-dot"></span>Stream</span>
+    <span id="cpu-label" style="margin-left:auto">CPU: --</span>
+    <span id="temp-label">-- &deg;C</span>
   </div>
 
   <div id="video-wrap">
@@ -152,6 +154,23 @@ function checkHealth() {
     })
     .catch(function() {
       ['flask-dot','ffmpeg-dot','stream-dot'].forEach(function(id) { document.getElementById(id).className = 'dot err'; });
+    });
+}
+
+// ── Pi stats ─────────────────────────────────────────────────────────────────
+function checkStats() {
+  fetch(BASE + '/api/stats', { signal: AbortSignal.timeout(3000) })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      document.getElementById('cpu-label').textContent = 'CPU: ' + d.cpu + '%';
+      document.getElementById('temp-label').textContent = d.temp_c + '°C';
+      // Highlight temp if hot
+      var t = parseFloat(d.temp_c);
+      document.getElementById('temp-label').style.color = t > 75 ? 'var(--danger)' : t > 60 ? '#ffaa00' : '';
+    })
+    .catch(function() {
+      document.getElementById('cpu-label').textContent = 'CPU: ?';
+      document.getElementById('temp-label').textContent = '? °C';
     });
 }
 
@@ -249,7 +268,9 @@ if ('serviceWorker' in navigator) {
 applyFit();
 applyRotation();
 checkHealth();
+checkStats();
 setInterval(checkHealth, 10000);
+setInterval(checkStats, 5000);
 loadStream();
 </script>
 </body>
