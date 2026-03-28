@@ -54,9 +54,31 @@ def hls_file(filename):
 @app.route("/api/health")
 def health():
     result = subprocess.run(["pgrep", "-x", "ffmpeg"], capture_output=True)
-    ffmpeg_ok  = result.returncode == 0
+    ffmpeg_ok   = result.returncode == 0
     playlist_ok = os.path.exists(os.path.join(HLS_DIR, "stream.m3u8"))
     return {"flask": True, "ffmpeg": ffmpeg_ok, "playlist": playlist_ok}
+
+
+@app.route("/api/stats")
+def stats():
+    """Return Pi CPU % and temperature."""
+    try:
+        # CPU percentage (non-blocking, 0.1s interval)
+        cpu = subprocess.run(
+            ["sh", "-c", "top -bn1 | grep 'Cpu(s)' | awk '{print $2}'"],
+            capture_output=True, text=True, timeout=3
+        ).stdout.strip()
+        # GPU/CPU temp from vcgencmd (Pi-specific)
+        temp_raw = subprocess.run(
+            ["vcgencmd", "measure_temp"],
+            capture_output=True, text=True, timeout=3
+        ).stdout.strip()  # returns "temp=47.8'C"
+        temp = temp_raw.replace("temp=", "").replace("'C", "").strip()
+    except Exception as e:
+        log.error("stats error: %s", e)
+        cpu  = "?"
+        temp = "?"
+    return {"cpu": cpu, "temp_c": temp}
 
 
 if __name__ == "__main__":
